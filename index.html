@@ -215,7 +215,7 @@
   </div></div>
 </div>
 
-<div id="hud"><button id="detach">Detach</button><button id="mode" style="display:none">Drag: Rotate</button><button id="hud3d">3D view</button></div>
+<div id="hud"><button id="detach">Detach</button><button id="layers">See layers</button><button id="mode" style="display:none">Drag: Rotate</button><button id="hud3d">3D view</button></div>
 <div id="hint"></div>
 
 <script>
@@ -446,9 +446,29 @@
     <a-entity id="pop" hide-bottom scale="0.001 0.001 0.001"
               animation__pop="property: scale; from: 0.001 0.001 0.001; to: 1 1 1; dur: 1500; easing: easeOutBack; startEvents: popstart"
               animation__spin="property: rotation; from: 0 0 0; to: 0 0 360; dur: 1500; easing: easeOutCubic; startEvents: popstart">
-      <a-entity id="zoom"><a-entity id="tilt"><a-entity id="spin">
-        <a-gltf-model src="#dish" rotation="${rot}" position="${pos}" scale="${sc}"></a-gltf-model>
-      </a-entity></a-entity></a-entity>
+      <!-- EXPLODED LAYERS (v1): the real pizza is the top layer. Dough and sauce are
+           simple discs underneath it, hidden when assembled, visible when exploded.
+           In pop space, Z is out of the menu photo, so layers separate along Z.
+           Assembled Z: dough -0.06, sauce -0.02, pizza 0.02 (its normal position).
+           Exploded Z:  dough -0.38, sauce -0.16, pizza +0.18 -->
+      <a-entity id="layer-dough" position="0 0 -0.06"
+                animation__explode="property: position; from: 0 0 -0.06; to: 0 0 -0.38; dur: 1100; delay: 0; easing: easeOutCubic; startEvents: explode"
+                animation__assemble="property: position; from: 0 0 -0.38; to: 0 0 -0.06; dur: 1100; delay: 900; easing: easeInOutCubic; startEvents: assemble">
+        <a-cylinder radius="0.32" height="0.03" rotation="90 0 0" color="#e6c795" roughness="0.9"></a-cylinder>
+        <a-torus radius="0.295" tube="0.022" color="#d99a4e" roughness="0.8"></a-torus>
+      </a-entity>
+      <a-entity id="layer-sauce" position="0 0 -0.02"
+                animation__explode="property: position; from: 0 0 -0.02; to: 0 0 -0.16; dur: 1100; delay: 250; easing: easeOutCubic; startEvents: explode"
+                animation__assemble="property: position; from: 0 0 -0.16; to: 0 0 -0.02; dur: 1100; delay: 450; easing: easeInOutCubic; startEvents: assemble">
+        <a-cylinder radius="0.29" height="0.012" rotation="90 0 0" color="#b8321f" roughness="0.55"></a-cylinder>
+      </a-entity>
+      <a-entity id="layer-pizza" position="0 0 0"
+                animation__explode="property: position; from: 0 0 0; to: 0 0 0.18; dur: 1100; delay: 500; easing: easeOutCubic; startEvents: explode"
+                animation__assemble="property: position; from: 0 0 0.18; to: 0 0 0; dur: 1100; delay: 0; easing: easeInOutCubic; startEvents: assemble">
+        <a-entity id="zoom"><a-entity id="tilt"><a-entity id="spin">
+          <a-gltf-model src="#dish" rotation="${rot}" position="${pos}" scale="${sc}"></a-gltf-model>
+        </a-entity></a-entity></a-entity>
+      </a-entity>
     </a-entity>
   </a-entity>
 </a-scene>`);
@@ -548,10 +568,27 @@
 
     // Pop-up + 360 spin (1.5s). Replays only if the photo was lost for more than 1.2s.
     const playPop = () => pop.emit('popstart');
+    // Exploded layers: dough -> sauce -> pizza assemble, like the watch demo.
+    // Layers start assembled, explode apart, hold, then assemble again.
+    let layerTimer1 = null, layerTimer2 = null;
+    const playLayers = () => {
+      const layers = ['layer-dough', 'layer-sauce', 'layer-pizza'].map(id => $(id)).filter(Boolean);
+      if (!layers.length) return;
+      clearTimeout(layerTimer1); clearTimeout(layerTimer2);
+      layers.forEach(el => el.emit('explode'));
+      hint('Dough · Sauce · Cheese & toppings');
+      layerTimer1 = setTimeout(() => {
+        layers.forEach(el => el.emit('assemble'));
+        hint('Drag to rotate · pinch to zoom');
+      }, 3400);
+    };
+    window.__replayLayers = playLayers;
+    const layersBtn = $('layers');
+    if (layersBtn) layersBtn.onclick = () => { playLayers(); };
     t0.addEventListener('targetFound', () => {
       found = true; clearTimeout(goneTimer);
       if (!detached) hint('Drag to rotate · pinch to zoom');
-      if (!detached && gone) { gone = false; playPop(); }
+      if (!detached && gone) { gone = false; playPop(); setTimeout(playLayers, 900); }
     });
     t0.addEventListener('targetLost', () => {
       found = false;
