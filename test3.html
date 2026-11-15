@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><title>Layer test v3b</title>
+<script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+<style>body{margin:0} #info{position:fixed;left:8px;top:8px;z-index:9;background:#fff;color:#000;padding:8px;font:13px monospace;white-space:pre}</style>
+</head><body>
+<div id="info">loading v3b...</div>
+<a-scene background="color: #888">
+  <a-assets><a-asset-item id="dish" src="dishes/mcart_small-v1.glb"></a-asset-item></a-assets>
+  <a-camera position="0 0 1.5" look-controls="enabled: false"></a-camera>
+  <a-light type="ambient" intensity="1.2"></a-light>
+  <a-light type="directional" intensity="1" position="0.5 1 1"></a-light>
+  <a-entity id="zoom"><a-entity id="tilt"><a-entity id="spin">
+    <a-entity id="layer-dough" position="0 -0.35 -0.06"
+      animation__explode="property: position; to: 0 -0.35 -0.06; dur: 1100; delay: 0; easing: easeOutCubic; startEvents: explode"
+      animation__assemble="property: position; to: 0 0 -0.06; dur: 1100; delay: 900; easing: easeInOutCubic; startEvents: assemble">
+      <a-circle radius="0.32" color="#e6c795" side="double"></a-circle>
+      <a-ring color="#d99a4e" radius-inner="0.29" radius-outer="0.32" position="0 0 0.001"></a-ring>
+    </a-entity>
+    <a-entity id="layer-sauce" position="0 0 -0.02">
+      <a-circle radius="0.29" color="#b8321f" side="double"></a-circle>
+    </a-entity>
+    <a-entity id="layer-pizza" position="0 0.35 0"
+      animation__explode="property: position; to: 0 0.35 0; dur: 1100; delay: 500; easing: easeOutCubic; startEvents: explode"
+      animation__assemble="property: position; to: 0 0 0; dur: 1100; delay: 0; easing: easeInOutCubic; startEvents: assemble">
+      <a-gltf-model src="#dish" rotation="90 0 0" position="0 0 0.02" scale="2 2 2"></a-gltf-model>
+    </a-entity>
+  </a-entity></a-entity></a-entity>
+</a-scene>
+<script>
+setTimeout(() => {
+  try {
+    const q = s => document.querySelector(s);
+    const fmt = v => v.x.toFixed(3)+','+v.y.toFixed(3)+','+v.z.toFixed(3);
+    let out = 'v3b diag\n';
+    const cam = q('a-camera');
+    out += 'cam world=' + fmt(cam.object3D.getWorldPosition(new AFRAME.THREE.Vector3())) + '\n';
+    for (const id of ['layer-dough','layer-sauce','layer-pizza']) {
+      const el = q('#'+id);
+      out += id + ' pos=' + fmt(el.object3D.position) + ' world=' + fmt(el.object3D.getWorldPosition(new AFRAME.THREE.Vector3())) + '\n';
+    }
+    document.getElementById('info').textContent = out;
+  } catch(e) { document.getElementById('info').textContent = 'diag error: ' + e.message; }
+}, 3000);
+</script>
+</body></html>
