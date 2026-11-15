@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><title>Layer test v4 - 3D ingredients</title>
+<script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+<style>body{margin:0} button{position:fixed;z-index:9;bottom:12px;padding:10px 14px;font-size:16px} #b1{left:12px} #b2{left:130px} #info{position:fixed;left:8px;top:8px;z-index:9;background:#fff;color:#000;padding:8px;font:13px monospace}</style>
+</head><body>
+<div id="info">v4 3D ingredients - bottom=dough+sauce, mid=cheese+toppings, top=real pizza GLB</div>
+<button id="b1" onclick="document.querySelectorAll('[id^=layer-]').forEach(e=>e.emit('assemble'))">Assemble</button>
+<button id="b2" onclick="document.querySelectorAll('[id^=layer-]').forEach(e=>e.emit('explode'))">Explode</button>
+<a-scene background="color: #888">
+  <a-assets><a-asset-item id="dish" src="dishes/mcart_small-v1.glb"></a-asset-item></a-assets>
+  <a-camera position="0 0 1.5" look-controls="enabled: false"></a-camera>
+  <a-light type="ambient" intensity="1.2"></a-light>
+  <a-light type="directional" intensity="1" position="0.5 1 1"></a-light>
+  <a-entity id="zoom"><a-entity id="tilt"><a-entity id="spin">
+    <!-- BOTTOM: dough + sauce -->
+    <a-entity id="layer-bottom" position="0 -0.35 -0.06"
+      animation__explode="property: position; to: 0 -0.35 -0.06; dur: 1100; easing: easeOutCubic; startEvents: explode"
+      animation__assemble="property: position; to: 0 0 -0.06; dur: 1100; delay: 900; easing: easeInOutCubic; startEvents: assemble">
+      <a-circle radius="0.32" color="#e6c795" side="double"></a-circle>
+      <a-ring color="#d99a4e" radius-inner="0.29" radius-outer="0.32" position="0 0 0.001"></a-ring>
+      <a-circle radius="0.29" color="#b8321f" position="0 0 0.002" side="double"></a-circle>
+      <a-circle radius="0.20" color="#c9402a" position="0 0 0.003" side="double"></a-circle>
+    </a-entity>
+    <!-- MIDDLE: melted cheese + toppings -->
+    <a-entity id="layer-mid" position="0 0 -0.02"
+      animation__explode="property: position; to: 0 0 -0.02; dur: 1100; delay: 250; easing: easeOutCubic; startEvents: explode"
+      animation__assemble="property: position; to: 0 0 -0.02; dur: 1100; delay: 450; easing: easeInOutCubic; startEvents: assemble">
+      <a-circle radius="0.27" color="#f7e8a0" side="double"></a-circle>
+      <a-circle radius="0.22" color="#f2d76b" position="0 0 0.001" side="double"></a-circle>
+      <!-- pepperoni -->
+      <a-circle radius="0.045" color="#a83226" position="-0.12 0.08 0.004"></a-circle>
+      <a-circle radius="0.045" color="#a83226" position="0.13 -0.06 0.004"></a-circle>
+      <a-circle radius="0.04" color="#a83226" position="0.02 0.15 0.004"></a-circle>
+      <a-circle radius="0.04" color="#a83226" position="-0.05 -0.14 0.004"></a-circle>
+      <!-- jalapeno rings -->
+      <a-ring radius-inner="0.025" radius-outer="0.04" color="#4a7c2e" position="0.10 0.12 0.004"></a-ring>
+      <a-ring radius-inner="0.025" radius-outer="0.04" color="#4a7c2e" position="-0.16 -0.02 0.004"></a-ring>
+      <a-ring radius-inner="0.025" radius-outer="0.04" color="#4a7c2e" position="0.05 -0.10 0.004"></a-ring>
+      <!-- chicken chunks -->
+      <a-circle radius="0.035" color="#c98a3d" position="0.16 0.02 0.004"></a-circle>
+      <a-circle radius="0.03" color="#c98a3d" position="-0.08 0.02 0.004"></a-circle>
+      <a-circle radius="0.032" color="#c98a3d" position="0.08 -0.16 0.004"></a-circle>
+      <a-circle radius="0.028" color="#c98a3d" position="-0.14 0.14 0.004"></a-circle>
+      <!-- red pepper strips -->
+      <a-plane width="0.12" height="0.025" color="#d92b1f" position="0.02 0.06 0.004" rotation="0 0 30"></a-plane>
+      <a-plane width="0.11" height="0.025" color="#d92b1f" position="-0.10 -0.08 0.004" rotation="0 0 -40"></a-plane>
+      <!-- onion arcs -->
+      <a-ring radius-inner="0.05" radius-outer="0.06" theta-start="200" theta-length="140" color="#e8d5e8" position="0.12 -0.12 0.004"></a-ring>
+      <a-ring radius-inner="0.05" radius-outer="0.06" theta-start="20" theta-length="140" color="#e8d5e8" position="-0.02 0.10 0.004"></a-ring>
+    </a-entity>
+    <!-- TOP: real pizza -->
+    <a-entity id="layer-pizza" position="0 0.35 0"
+      animation__explode="property: position; to: 0 0.35 0; dur: 1100; delay: 500; easing: easeOutCubic; startEvents: explode"
+      animation__assemble="property: position; to: 0 0 0; dur: 1100; easing: easeInOutCubic; startEvents: assemble">
+      <a-gltf-model src="#dish" rotation="90 0 0" position="0 0 0.02" scale="2 2 2"></a-gltf-model>
+    </a-entity>
+  </a-entity></a-entity></a-entity>
+</a-scene>
+</body></html>
