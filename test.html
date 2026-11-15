@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><title>Layer test - no MindAR</title>
+<script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+<style>body{margin:0} #info{position:fixed;left:8px;top:8px;z-index:9;background:#fff;color:#000;padding:8px;font:14px system-ui}</style>
+</head><body>
+<div id="info">Front camera view. Red ring = pizza diameter (0.64). Dough = beige disc, sauce = red disc, pizza = GLB.<br>
+<button onclick="document.querySelector('#layer-dough').emit('explode');document.querySelector('#layer-sauce').emit('explode');document.querySelector('#layer-pizza').emit('explode')">Explode</button>
+<button onclick="document.querySelector('#layer-dough').emit('assemble');document.querySelector('#layer-sauce').emit('assemble');document.querySelector('#layer-pizza').emit('assemble')">Assemble</button>
+</div>
+<a-scene background="color: #888">
+  <a-assets><a-asset-item id="dish" src="dishes/mcart_small-v1.glb"></a-asset-item></a-assets>
+  <a-camera position="0 0 1.5" look-controls="enabled: false"></a-camera>
+  <a-light type="ambient" intensity="1.2"></a-light>
+  <a-light type="directional" intensity="1" position="0.5 1 1"></a-light>
+  <!-- Exact copy of v2 layers, inside #spin, no #pop spin -->
+  <a-entity id="zoom"><a-entity id="tilt"><a-entity id="spin">
+    <a-ring color="red" radius-inner="0.31" radius-outer="0.33" position="0 0 0.12"></a-ring>
+    <a-entity id="layer-dough" position="0 -0.22 -0.08"
+      animation__explode="property: position; from: 0 0 -0.06; to: 0 -0.22 -0.08; dur: 1100; delay: 0; easing: easeOutCubic; startEvents: explode"
+      animation__assemble="property: position; from: 0 -0.22 -0.08; to: 0 0 -0.06; dur: 1100; delay: 900; easing: easeInOutCubic; startEvents: assemble">
+      <a-cylinder radius="0.16" height="0.015" rotation="90 0 0" scale="2 2 2" color="#e6c795" roughness="0.9"></a-cylinder>
+      <a-torus radius="0.1475" tube="0.011" scale="2 2 2" color="#d99a4e" roughness="0.8"></a-torus>
+    </a-entity>
+    <a-entity id="layer-sauce" position="0 0 -0.02"
+      animation__explode="property: position; from: 0 0 -0.02; to: 0 0 -0.02; dur: 1100; delay: 250; easing: easeOutCubic; startEvents: explode"
+      animation__assemble="property: position; from: 0 0 -0.02; to: 0 0 -0.02; dur: 1100; delay: 450; easing: easeInOutCubic; startEvents: assemble">
+      <a-cylinder radius="0.145" height="0.006" rotation="90 0 0" scale="2 2 2" color="#b8321f" roughness="0.55"></a-cylinder>
+    </a-entity>
+    <a-entity id="layer-pizza" position="0 0.22 0.06"
+      animation__explode="property: position; from: 0 0 0; to: 0 0.22 0.06; dur: 1100; delay: 500; easing: easeOutCubic; startEvents: explode"
+      animation__assemble="property: position; from: 0 0.22 0.06; to: 0 0 0; dur: 1100; delay: 0; easing: easeInOutCubic; startEvents: assemble">
+      <a-gltf-model src="#dish" rotation="90 0 0" position="0 0 0.02" scale="2 2 2"></a-gltf-model>
+    </a-entity>
+  </a-entity></a-entity></a-entity>
+</a-scene>
+</body></html>
