@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><title>Diag test</title>
+<script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+<style>body{margin:0} #info{position:fixed;left:8px;top:8px;z-index:9;background:#fff;color:#000;padding:8px;font:13px monospace;white-space:pre}</style>
+</head><body>
+<div id="info">loading...</div>
+<a-scene background="color: #888">
+  <a-assets><a-asset-item id="dish" src="dishes/mcart_small-v1.glb"></a-asset-item></a-assets>
+  <a-camera id="cam" position="0 0 1.5" look-controls="enabled: false"></a-camera>
+  <a-light type="ambient" intensity="1.2"></a-light>
+  <a-light type="directional" intensity="1" position="0.5 1 1"></a-light>
+  <a-circle id="c01" radius="0.1" color="green" position="-0.5 0 0"></a-circle>
+  <a-circle id="c032" radius="0.32" color="#e6c795" position="0 -0.35 -0.06"></a-circle>
+  <a-circle id="c10" radius="1.0" color="blue" position="0.5 0 0" opacity="0.5"></a-circle>
+  <a-gltf-model id="pizza" src="#dish" rotation="90 0 0" position="0 0.35 0.02" scale="2 2 2"></a-gltf-model>
+</a-scene>
+<script>
+setTimeout(() => {
+  const q = s => document.querySelector(s);
+  const fmt = v => v ? v.x.toFixed(3)+','+v.y.toFixed(3)+','+v.z.toFixed(3) : 'null';
+  let out = '';
+  const cam = q('#cam');
+  out += 'cam pos attr=' + cam.getAttribute('position').x+','+cam.getAttribute('position').y+','+cam.getAttribute('position').z + '\n';
+  out += 'cam world=' + fmt(cam.object3D.getWorldPosition(new THREE.Vector3())) + '\n';
+  out += 'cam fov=' + cam.getAttribute('camera').fov + '\n';
+  for (const id of ['c01','c032','c10','pizza']) {
+    const el = q('#'+id);
+    out += id + ' attr radius=' + el.getAttribute('radius') + ' scale=' + fmt(el.object3D.scale) + ' pos=' + fmt(el.object3D.position) + ' world=' + fmt(el.object3D.getWorldPosition(new THREE.Vector3())) + '\n';
+    if (el.getObject3D('mesh')) {
+      const g = el.getObject3D('mesh').geometry;
+      out += '  geom params=' + JSON.stringify(g.parameters) + ' boundingSphere r=' + (g.boundingSphere ? g.boundingSphere.radius.toFixed(3) : '?') + '\n';
+    }
+  }
+  out += 'innerWidth=' + window.innerWidth + ' innerHeight=' + window.innerHeight + '\n';
+  document.getElementById('info').textContent = out;
+}, 3000);
+</script>
+</body></html>
