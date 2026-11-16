@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><title>Layer test v6 - McArt video style</title>
+<script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+<style>body{margin:0} button{position:fixed;z-index:9;bottom:12px;padding:10px 14px;font-size:16px} #b1{left:12px} #b2{left:130px} #info{position:fixed;left:8px;top:8px;z-index:9;background:#fff;color:#000;padding:8px;font:13px monospace}</style>
+</head><body>
+<div id="info">v6 McArt - like the video: dough &amp; sauce, cheese pull with chicken &amp; jalapeno, real pizza on top</div>
+<button id="b1" onclick="document.querySelectorAll('[id^=layer-]').forEach(e=>e.emit('assemble'))">Assemble</button>
+<button id="b2" onclick="document.querySelectorAll('[id^=layer-]').forEach(e=>e.emit('explode'))">Explode</button>
+<a-scene background="color: #888">
+  <a-assets>
+    <a-asset-item id="dish" src="dishes/mcart_small-v1.glb"></a-asset-item>
+    <img id="img-bottom" src="dishes/layer-bottom.png">
+    <img id="img-mid" src="dishes/layer-mid.png">
+  </a-assets>
+  <a-camera position="0 0 1.5" look-controls="enabled: false"></a-camera>
+  <a-light type="ambient" intensity="1.2"></a-light>
+  <a-light type="directional" intensity="1" position="0.5 1 1"></a-light>
+  <a-entity id="zoom"><a-entity id="tilt"><a-entity id="spin">
+    <!-- v6 McArt: photo layers from the Chicken Jalapeno exploded image,
+         real McArt GLB on top as the final look. Layers separate along
+         the pizza normal (Z, the dish "up" axis) plus a small Y offset,
+         so in Detach mode they stack vertically like the video instead
+         of spreading sideways on the floor (the v4 bug). In Scan mode
+         they lift towards the camera with a slight vertical offset.
+         Exploded: dough (Y -0.12, Z -0.35), cheese (Y 0, Z 0),
+         pizza (Y +0.18, Z +0.45). Assembled: all Y 0, Z -0.06 / -0.02 / 0.
+         Assemble is staggered dough -> cheese -> pizza; explode is reverse. -->
+    <a-entity id="layer-dough" position="0 -0.12 -0.35"
+      animation__explode="property: position; to: 0 -0.12 -0.35; dur: 1100; delay: 900; easing: easeOutCubic; startEvents: explode"
+      animation__assemble="property: position; to: 0 0 -0.06; dur: 1100; delay: 0; easing: easeInOutCubic; startEvents: assemble">
+      <a-plane width="0.64" height="0.151" src="#img-bottom" transparent="true" side="double"></a-plane>
+    </a-entity>
+    <a-entity id="layer-cheese" position="0 0 0"
+      animation__explode="property: position; to: 0 0 0; dur: 1100; delay: 450; easing: easeOutCubic; startEvents: explode"
+      animation__assemble="property: position; to: 0 0 -0.02; dur: 1100; delay: 450; easing: easeInOutCubic; startEvents: assemble">
+      <a-plane width="0.64" height="0.175" src="#img-mid" transparent="true" side="double"></a-plane>
+    </a-entity>
+    <a-entity id="layer-pizza" position="0 0.18 0.45"
+      animation__explode="property: position; to: 0 0.18 0.45; dur: 1100; delay: 0; easing: easeOutCubic; startEvents: explode"
+      animation__assemble="property: position; to: 0 0 0; dur: 1100; delay: 900; easing: easeInOutCubic; startEvents: assemble">
+      <a-gltf-model src="#dish" rotation="90 0 0" position="0 0 0.02" scale="2 2 2"></a-gltf-model>
+    </a-entity>
+  </a-entity></a-entity></a-entity>
+</a-scene>
+</body></html>
