@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><title>Layer test v5 - Blender layers</title>
+<script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+<style>body{margin:0} button{position:fixed;z-index:9;bottom:12px;padding:10px 14px;font-size:16px} #b1{left:12px} #b2{left:130px} #info{position:fixed;left:8px;top:8px;z-index:9;background:#fff;color:#000;padding:8px;font:13px monospace}</style>
+</head><body>
+<div id="info">v5 Blender layers - dough, sauce, cheese+toppings, real pizza GLB</div>
+<button id="b1" onclick="document.querySelectorAll('[id^=layer-]').forEach(e=>e.emit('assemble'))">Assemble</button>
+<button id="b2" onclick="document.querySelectorAll('[id^=layer-]').forEach(e=>e.emit('explode'))">Explode</button>
+<a-scene background="color: #888">
+  <a-assets>
+    <a-asset-item id="dish" src="dishes/mcart_small-v1.glb"></a-asset-item>
+    <a-asset-item id="layerDough" src="dishes/layer_dough.glb"></a-asset-item>
+    <a-asset-item id="layerSauce" src="dishes/layer_sauce.glb"></a-asset-item>
+    <a-asset-item id="layerCheese" src="dishes/layer_cheese.glb"></a-asset-item>
+  </a-assets>
+  <a-camera position="0 0 1.5" look-controls="enabled: false"></a-camera>
+  <a-light type="ambient" intensity="1.2"></a-light>
+  <a-light type="directional" intensity="1" position="0.5 1 1"></a-light>
+  <a-entity id="zoom"><a-entity id="tilt"><a-entity id="spin">
+    <a-entity id="layer-dough" position="0 -0.45 -0.06"
+      animation__explode="property: position; to: 0 -0.45 -0.06; dur: 1100; delay: 900; easing: easeOutCubic; startEvents: explode"
+      animation__assemble="property: position; to: 0 0 -0.06; dur: 1100; delay: 0; easing: easeInOutCubic; startEvents: assemble">
+      <a-gltf-model src="#layerDough" rotation="90 0 0" position="0 0 0.02" scale="2 2 2"></a-gltf-model>
+    </a-entity>
+    <a-entity id="layer-sauce" position="0 -0.15 -0.04"
+      animation__explode="property: position; to: 0 -0.15 -0.04; dur: 1100; delay: 600; easing: easeOutCubic; startEvents: explode"
+      animation__assemble="property: position; to: 0 0 -0.04; dur: 1100; delay: 300; easing: easeInOutCubic; startEvents: assemble">
+      <a-gltf-model src="#layerSauce" rotation="90 0 0" position="0 0 0.02" scale="2 2 2"></a-gltf-model>
+    </a-entity>
+    <a-entity id="layer-cheese" position="0 0.15 -0.02"
+      animation__explode="property: position; to: 0 0.15 -0.02; dur: 1100; delay: 300; easing: easeOutCubic; startEvents: explode"
+      animation__assemble="property: position; to: 0 0 -0.02; dur: 1100; delay: 600; easing: easeInOutCubic; startEvents: assemble">
+      <a-gltf-model src="#layerCheese" rotation="90 0 0" position="0 0 0.02" scale="2 2 2"></a-gltf-model>
+    </a-entity>
+    <a-entity id="layer-pizza" position="0 0.45 0"
+      animation__explode="property: position; to: 0 0.45 0; dur: 1100; delay: 0; easing: easeOutCubic; startEvents: explode"
+      animation__assemble="property: position; to: 0 0 0; dur: 1100; delay: 900; easing: easeInOutCubic; startEvents: assemble">
+      <a-gltf-model src="#dish" rotation="90 0 0" position="0 0 0.02" scale="2 2 2"></a-gltf-model>
+    </a-entity>
+  </a-entity></a-entity></a-entity>
+</a-scene>
+</body></html>
