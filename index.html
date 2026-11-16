@@ -438,45 +438,44 @@
          mindar-image="imageTargetSrc: ${DISH.mind}; autoStart: false; uiLoading: no; uiScanning: no; uiError: no; maxTrack: 1; filterMinCF: 0.0001; filterBeta: 0.001;"
          color-space="sRGB" renderer="colorManagement: true; physicallyCorrectLights: true"
          vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
-  <a-assets><a-asset-item id="dish" src="${DISH.glb}"></a-asset-item></a-assets>
+  <a-assets>
+    <a-asset-item id="dish" src="${DISH.glb}"></a-asset-item>
+    <img id="img-bottom" src="dishes/layer-bottom.png">
+    <img id="img-mid" src="dishes/layer-mid.png">
+  </a-assets>
   <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
   <a-light type="ambient" intensity="1.2"></a-light>
   <a-light type="directional" intensity="1" position="0.5 1 1"></a-light>
   <a-entity id="t0" mindar-image-target="targetIndex: 0">
     <a-entity id="pop" hide-bottom scale="0.001 0.001 0.001"
               animation__pop="property: scale; from: 0.001 0.001 0.001; to: 1 1 1; dur: 1500; easing: easeOutBack; startEvents: popstart">
-      <!-- EXPLODED LAYERS (v3 - the fix that actually works):
-           WHY v1/v2 showed only a yellow circle, on mobile and iOS:
-           - v1/v2 used <a-cylinder> discs. In my render test (test2.html)
-             a flat <a-circle> and the pizza GLB both render at the correct
-             size, with the right ratios (radius 1.0 = 791px, 0.32 = 242px,
-             0.1 = 80px). The cylinder discs did not - they came out huge,
-             in front of everything, covering the pizza, sauce and ring.
-           - v2 also kept the original 360-degree pop spin. With layers
-             offset in Y, that spin swings them around the centre like a
-             spinning yellow ball, instead of stacking them.
-           FIX in v3:
-           - No cylinders, no torus. Dough and sauce are flat <a-circle>
-             discs (radius 0.32 / 0.29, no scale), plus a crust <a-ring>.
-             These are proven to render at pizza size in test2.html.
-           - No pop spin. Only the pop-up scale animation remains.
-           - Layers separate ONLY along Y (up/down on screen, like the
-             infographic): dough Y -0.35, sauce Y 0, pizza Y +0.35.
-             Z offsets are tiny (-0.06 / -0.02 / 0) so nothing covers anything.
-           - Animations use only "to", no "from", so A-Frame does not reset
-             the layers to the wrong start position on load.
-           - Layers START exploded, then assemble on targetFound.
-             Assembled: dough (0,0,-0.06), sauce (0,0,-0.02), pizza (0,0,0).
-             Exploded:  dough (0,-0.35,-0.06), sauce (0,0,-0.02), pizza (0,0.35,0). -->
+      <!-- EXPLODED LAYERS (v4 - photo layers from the exploded pizza image):
+           v3 proved the animation works, but flat coloured discs looked
+           like plates, not food. v4 replaces them with real photos cut
+           from the Exploded Chicken Jalapeno Pizza image Shahraiz shared:
+           - layer-dough: dishes/layer-bottom.png - dough base with sauce
+             (1360x320, plane 0.64 x 0.151), transparent background
+           - layer-sauce: dishes/layer-mid.png - melted cheese pull with
+             chicken, jalapeno, onion and red pepper floating in it
+             (1432x390, plane 0.64 x 0.175), transparent background
+           - layer-pizza: the real McArt GLB, as before - this is the
+             final look after the layers combine.
+           Same v3 rules: no cylinders, no pop spin, layers separate only
+           along Y (dough -0.35, mid 0, pizza +0.35), tiny Z offsets,
+           animations use only "to", layers START exploded, then assemble
+           on targetFound. Assembled: dough (0,0,-0.06), mid (0,0,-0.02),
+           pizza (0,0,0). Exploded: dough (0,-0.35,-0.06), mid (0,0,-0.02),
+           pizza (0,0.35,0). -->
       <a-entity id="zoom"><a-entity id="tilt"><a-entity id="spin">
         <a-entity id="layer-dough" position="0 -0.35 -0.06"
                   animation__explode="property: position; to: 0 -0.35 -0.06; dur: 1100; delay: 0; easing: easeOutCubic; startEvents: explode"
                   animation__assemble="property: position; to: 0 0 -0.06; dur: 1100; delay: 900; easing: easeInOutCubic; startEvents: assemble">
-          <a-circle radius="0.32" color="#e6c795" side="double"></a-circle>
-          <a-ring color="#d99a4e" radius-inner="0.29" radius-outer="0.32" position="0 0 0.001"></a-ring>
+          <a-plane width="0.64" height="0.151" src="#img-bottom" transparent="true" side="double"></a-plane>
         </a-entity>
-        <a-entity id="layer-sauce" position="0 0 -0.02">
-          <a-circle radius="0.29" color="#b8321f" side="double"></a-circle>
+        <a-entity id="layer-sauce" position="0 0 -0.02"
+                  animation__explode="property: position; to: 0 0 -0.02; dur: 1100; delay: 250; easing: easeOutCubic; startEvents: explode"
+                  animation__assemble="property: position; to: 0 0 -0.02; dur: 1100; delay: 450; easing: easeInOutCubic; startEvents: assemble">
+          <a-plane width="0.64" height="0.175" src="#img-mid" transparent="true" side="double"></a-plane>
         </a-entity>
         <a-entity id="layer-pizza" position="0 0.35 0"
                   animation__explode="property: position; to: 0 0.35 0; dur: 1100; delay: 500; easing: easeOutCubic; startEvents: explode"
