@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><title>Hologram test v7 - McArt real pizza</title>
+<script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+<style>
+  body{margin:0;background:#05070d;font-family:sans-serif}
+  #info{position:fixed;left:8px;top:8px;right:8px;z-index:9;background:rgba(0,0,0,.65);color:#bff3ff;padding:10px;font-size:14px;border:1px solid #1b6f8a;border-radius:8px}
+  #bar{position:fixed;left:0;right:0;bottom:0;z-index:9;display:flex;flex-wrap:wrap;gap:8px;justify-content:center;padding:12px}
+  #bar button{padding:10px 14px;font-size:15px;border-radius:20px;border:1px solid #35e0ff;background:#06222e;color:#bff3ff}
+  #bar button.on{background:#35e0ff;color:#04222e;font-weight:bold}
+</style>
+</head><body>
+<div id="info">v7 Hologram — the real McArt pizza. Tap Hologram to switch looks. No layers, no video.</div>
+<div id="bar">
+  <button id="b-holo" onclick="setHolo(!holo)">Hologram: OFF</button>
+  <button onclick="showInfo('dough')">Dough</button>
+  <button onclick="showInfo('sauce')">Sauce</button>
+  <button onclick="showInfo('cheese')">Cheese</button>
+  <button onclick="showInfo('toppings')">Toppings</button>
+</div>
+<a-scene background="color: #05070d">
+  <a-assets>
+    <a-asset-item id="dish" src="dishes/mcart_small-v1.glb"></a-asset-item>
+  </a-assets>
+  <a-camera position="0 0 1.5" look-controls="enabled: false"></a-camera>
+  <a-light type="ambient" intensity="1.4"></a-light>
+  <a-light type="directional" intensity="1" position="0.5 1 1"></a-light>
+  <a-entity id="rig" animation__float="property: position; to: 0 0.04 0; dur: 2800; dir: alternate; loop: true; easing: easeInOutSine">
+    <a-entity id="spin" animation__spin="property: rotation; to: 0 0 360; dur: 24000; loop: true; easing: linear">
+      <a-circle radius="0.55" color="#0a2a3a" opacity="0.6" position="0 0 -0.12"></a-circle>
+      <a-entity id="pizza-real">
+        <a-gltf-model src="#dish" rotation="90 0 0" position="0 0 0.02" scale="2 2 2"></a-gltf-model>
+      </a-entity>
+      <a-entity id="pizza-holo-solid" visible="false">
+        <a-gltf-model src="#dish" rotation="90 0 0" position="0 0 0.02" scale="2 2 2"></a-gltf-model>
+      </a-entity>
+      <a-entity id="pizza-holo-wire" visible="false">
+        <a-gltf-model src="#dish" rotation="90 0 0" position="0 0 0.02" scale="2 2 2"></a-gltf-model>
+      </a-entity>
+      <a-ring id="ring" radius-inner="0.36" radius-outer="0.40" color="#35e0ff" opacity="0.9" side="double" position="0 0 -0.06"></a-ring>
+      <a-ring id="ring2" radius-inner="0.44" radius-outer="0.45" color="#35e0ff" opacity="0.25" side="double" position="0 0 -0.06"
+        animation__pulse="property: scale; to: 1.08 1.08 1.08; dur: 1400; dir: alternate; loop: true; easing: easeInOutSine"></a-ring>
+      <a-entity id="particles" visible="false">
+        <a-sphere radius="0.010" color="#7df3ff" opacity="0.8" position="-0.28 -0.35 0.05" animation__rise="property: position; to: -0.28 0.45 0.05; dur: 2600; delay: 0; loop: true; easing: linear" animation__fade="property: material.opacity; to: 0; dur: 2600; delay: 0; loop: true; easing: linear"></a-sphere>
+        <a-sphere radius="0.012" color="#7df3ff" opacity="0.8" position="0.30 -0.35 0.02" animation__rise="property: position; to: 0.30 0.45 0.02; dur: 3000; delay: 400; loop: true; easing: linear" animation__fade="property: material.opacity; to: 0; dur: 3000; delay: 400; loop: true; easing: linear"></a-sphere>
+        <a-sphere radius="0.008" color="#ffffff" opacity="0.8" position="0.10 -0.35 0.08" animation__rise="property: position; to: 0.10 0.45 0.08; dur: 2200; delay: 900; loop: true; easing: linear" animation__fade="property: material.opacity; to: 0; dur: 2200; delay: 900; loop: true; easing: linear"></a-sphere>
+        <a-sphere radius="0.011" color="#7df3ff" opacity="0.8" position="-0.12 -0.35 0.06" animation__rise="property: position; to: -0.12 0.45 0.06; dur: 3400; delay: 1300; loop: true; easing: linear" animation__fade="property: material.opacity; to: 0; dur: 3400; delay: 1300; loop: true; easing: linear"></a-sphere>
+        <a-sphere radius="0.009" color="#ffffff" opacity="0.8" position="0.22 -0.35 0.04" animation__rise="property: position; to: 0.22 0.45 0.04; dur: 2800; delay: 1700; loop: true; easing: linear" animation__fade="property: material.opacity; to: 0; dur: 2800; delay: 1700; loop: true; easing: linear"></a-sphere>
+        <a-sphere radius="0.012" color="#7df3ff" opacity="0.8" position="-0.32 -0.35 0.03" animation__rise="property: position; to: -0.32 0.45 0.03; dur: 3200; delay: 2100; loop: true; easing: linear" animation__fade="property: material.opacity; to: 0; dur: 3200; delay: 2100; loop: true; easing: linear"></a-sphere>
+        <a-sphere radius="0.008" color="#7df3ff" opacity="0.8" position="0.02 -0.35 0.09" animation__rise="property: position; to: 0.02 0.45 0.09; dur: 2400; delay: 600; loop: true; easing: linear" animation__fade="property: material.opacity; to: 0; dur: 2400; delay: 600; loop: true; easing: linear"></a-sphere>
+        <a-sphere radius="0.010" color="#ffffff" opacity="0.8" position="-0.20 -0.35 0.07" animation__rise="property: position; to: -0.20 0.45 0.07; dur: 2900; delay: 1500; loop: true; easing: linear" animation__fade="property: material.opacity; to: 0; dur: 2900; delay: 1500; loop: true; easing: linear"></a-sphere>
+      </a-entity>
+    </a-entity>
+    <a-entity id="steam">
+      <a-sphere radius="0.035" color="#ffffff" opacity="0.14" position="-0.12 0.10 0.10" animation__steam="property: position; to: -0.12 0.50 0.10; dur: 4200; delay: 0; loop: true; easing: linear"></a-sphere>
+      <a-sphere radius="0.028" color="#ffffff" opacity="0.12" position="0.10 0.10 0.10" animation__steam="property: position; to: 0.10 0.50 0.10; dur: 4800; delay: 1400; loop: true; easing: linear"></a-sphere>
+      <a-sphere radius="0.032" color="#ffffff" opacity="0.12" position="0.02 0.10 0.12" animation__steam="property: position; to: 0.02 0.50 0.12; dur: 5200; delay: 2600; loop: true; easing: linear"></a-sphere>
+    </a-entity>
+  </a-entity>
+</a-scene>
+<script>
+  var holo = false;
+  function setInfo(t){ document.getElementById('info').textContent = t; }
+  var INFO = {
+    dough: 'Dough — soft & fluffy base, baked fresh with a golden crust.',
+    sauce: 'Sauce — signature pizza sauce, spread edge to edge.',
+    cheese: 'Cheese — melted mozzarella, stretchy and golden.',
+    toppings: 'Toppings — chicken, jalapeño, onion & red pepper on top.'
+  };
+  function showInfo(k){ setInfo(INFO[k]); }
+  function setHolo(on){
+    holo = on;
+    document.getElementById('pizza-real').setAttribute('visible', !on);
+    document.getElementById('pizza-holo-solid').setAttribute('visible', on);
+    document.getElementById('pizza-holo-wire').setAttribute('visible', on);
+    document.getElementById('particles').setAttribute('visible', on);
+    var b = document.getElementById('b-holo');
+    b.textContent = on ? 'Hologram: ON' : 'Hologram: OFF';
+    if (on) { b.classList.add('on'); } else { b.classList.remove('on'); }
+    setInfo(on ? 'Hologram mode — the same real pizza, glowing. Tap Hologram again for the real look.'
+              : 'Real pizza mode — tap Hologram to switch to the glowing look.');
+  }
+  // Swap holo copies to glowing cyan materials once each model loads.
+  function holoMaterials(el, mat){
+    el.addEventListener('model-loaded', function(){
+      el.getObject3D('mesh').traverse(function(o){
+        if (o.isMesh) { o.material = mat; }
+      });
+    });
+  }
+  window.addEventListener('load', function(){
+    var T = AFRAME.THREE;
+    holoMaterials(document.querySelector('#pizza-holo-solid a-gltf-model'),
+      new T.MeshBasicMaterial({color: 0x1899c2, transparent: true, opacity: 0.35, side: T.DoubleSide, depthWrite: false}));
+    holoMaterials(document.querySelector('#pizza-holo-wire a-gltf-model'),
+      new T.MeshBasicMaterial({color: 0x35e0ff, wireframe: true, transparent: true, opacity: 0.9}));
+  });
+</script>
+</body></html>
