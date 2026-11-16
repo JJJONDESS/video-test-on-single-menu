@@ -440,9 +440,8 @@
          vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
   <a-assets>
     <a-asset-item id="dish" src="${DISH.glb}"></a-asset-item>
-    <a-asset-item id="layerDough" src="dishes/layer_dough.glb"></a-asset-item>
-    <a-asset-item id="layerSauce" src="dishes/layer_sauce.glb"></a-asset-item>
-    <a-asset-item id="layerCheese" src="dishes/layer_cheese.glb"></a-asset-item>
+    <img id="img-bottom" src="dishes/layer-bottom.png">
+    <img id="img-mid" src="dishes/layer-mid.png">
   </a-assets>
   <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
   <a-light type="ambient" intensity="1.2"></a-light>
@@ -450,47 +449,48 @@
   <a-entity id="t0" mindar-image-target="targetIndex: 0">
     <a-entity id="pop" hide-bottom scale="0.001 0.001 0.001"
               animation__pop="property: scale; from: 0.001 0.001 0.001; to: 1 1 1; dur: 1500; easing: easeOutBack; startEvents: popstart">
-      <!-- EXPLODED LAYERS (v5 - real 3D ingredient layers built in Blender):
-           v3 proved the animation works, v4 photo strips lay flat in
-           Detach mode and looked like photos, not 3D. v5 uses real 3D
-           models built in Blender, each a full disc with thickness:
-           - layer-dough: dishes/layer_dough.glb - thick dough disc with
-             raised crust ring (121 KB)
-           - layer-sauce: dishes/layer_sauce.glb - red sauce disc with
-             swirl bumps (42 KB)
-           - layer-cheese: dishes/layer_cheese.glb - cheese disc with
-             pepperoni, jalapeno rings, chicken, red pepper, onion rings
-             as separate 3D pieces (428 KB)
+      <!-- EXPLODED LAYERS (v6 - McArt video style, professional):
+           v5 Blender layers were rejected - they looked cartoonish, not
+           like the real pizza. v6 goes back to the real McArt photos
+           from the Chicken Jalapeno exploded image Shahraiz shared,
+           like the KlingAI video he sent:
+           - layer-dough: dishes/layer-bottom.png - dough base with
+             signature red sauce (1360x320, plane 0.64 x 0.151)
+           - layer-cheese: dishes/layer-mid.png - melted mozzarella
+             cheese pull with chicken, jalapenos, bell peppers and
+             onions floating in it (1432x390, plane 0.64 x 0.175)
            - layer-pizza: the real McArt GLB, as before - this is the
              final look after the layers combine.
-           The pizza_*_draco.glb files in dishes/ are NOT used - they are
-           radial strips from a failed height cut of the scanned model,
-           not layers. Same v3 rules: no cylinders, no pop spin, layers
-           separate only along Y, tiny Z offsets, animations use only
-           "to", layers START exploded, then assemble on targetFound.
-           Exploded Y: dough -0.45, sauce -0.15, cheese +0.15, pizza
-           +0.45. Assembled: all Y 0 (dough -0.06, sauce -0.04, cheese
-           -0.02, pizza 0 in Z). Assemble is staggered dough first,
-           then sauce, cheese, pizza last; explode is the reverse. -->
+           Layers separate along BOTH axes: Y (visible as a vertical
+           stack on screen in Scan mode) and Z (the dish "up" axis, so
+           in Detach mode they lift up off the table instead of
+           spreading sideways on the floor - the v4 bug). Z-only
+           separation was invisible head-on, so Y+Z is used.
+           The top pizza also shrinks to scale 0.65 while exploded, so
+           the stack is balanced (242 / 253 / 207 px wide in the test),
+           and grows back to full size when assembled.
+           Exploded: dough (Y -0.45, Z -0.35), cheese (Y 0, Z 0),
+           pizza (Y +0.45, Z +0.45, scale 0.65). Assembled: all Y 0,
+           Z -0.06 / -0.02 / 0, scale 1. Assemble is staggered dough
+           -> cheese -> pizza; explode is the reverse. Animations use
+           only "to", no pop spin, layers START exploded, then assemble
+           on targetFound. -->
       <a-entity id="zoom"><a-entity id="tilt"><a-entity id="spin">
-        <a-entity id="layer-dough" position="0 -0.45 -0.06"
-                  animation__explode="property: position; to: 0 -0.45 -0.06; dur: 1100; delay: 900; easing: easeOutCubic; startEvents: explode"
+        <a-entity id="layer-dough" position="0 -0.45 -0.35"
+                  animation__explode="property: position; to: 0 -0.45 -0.35; dur: 1100; delay: 900; easing: easeOutCubic; startEvents: explode"
                   animation__assemble="property: position; to: 0 0 -0.06; dur: 1100; delay: 0; easing: easeInOutCubic; startEvents: assemble">
-          <a-gltf-model src="#layerDough" rotation="${rot}" position="${pos}" scale="${sc}"></a-gltf-model>
+          <a-plane width="0.64" height="0.151" src="#img-bottom" transparent="true" side="double"></a-plane>
         </a-entity>
-        <a-entity id="layer-sauce" position="0 -0.15 -0.04"
-                  animation__explode="property: position; to: 0 -0.15 -0.04; dur: 1100; delay: 600; easing: easeOutCubic; startEvents: explode"
-                  animation__assemble="property: position; to: 0 0 -0.04; dur: 1100; delay: 300; easing: easeInOutCubic; startEvents: assemble">
-          <a-gltf-model src="#layerSauce" rotation="${rot}" position="${pos}" scale="${sc}"></a-gltf-model>
+        <a-entity id="layer-cheese" position="0 0 0"
+                  animation__explode="property: position; to: 0 0 0; dur: 1100; delay: 450; easing: easeOutCubic; startEvents: explode"
+                  animation__assemble="property: position; to: 0 0 -0.02; dur: 1100; delay: 450; easing: easeInOutCubic; startEvents: assemble">
+          <a-plane width="0.64" height="0.175" src="#img-mid" transparent="true" side="double"></a-plane>
         </a-entity>
-        <a-entity id="layer-cheese" position="0 0.15 -0.02"
-                  animation__explode="property: position; to: 0 0.15 -0.02; dur: 1100; delay: 300; easing: easeOutCubic; startEvents: explode"
-                  animation__assemble="property: position; to: 0 0 -0.02; dur: 1100; delay: 600; easing: easeInOutCubic; startEvents: assemble">
-          <a-gltf-model src="#layerCheese" rotation="${rot}" position="${pos}" scale="${sc}"></a-gltf-model>
-        </a-entity>
-        <a-entity id="layer-pizza" position="0 0.45 0"
-                  animation__explode="property: position; to: 0 0.45 0; dur: 1100; delay: 0; easing: easeOutCubic; startEvents: explode"
-                  animation__assemble="property: position; to: 0 0 0; dur: 1100; delay: 900; easing: easeInOutCubic; startEvents: assemble">
+        <a-entity id="layer-pizza" position="0 0.45 0.45" scale="0.65 0.65 0.65"
+                  animation__explode="property: position; to: 0 0.45 0.45; dur: 1100; delay: 0; easing: easeOutCubic; startEvents: explode"
+                  animation__assemble="property: position; to: 0 0 0; dur: 1100; delay: 900; easing: easeInOutCubic; startEvents: assemble"
+                  animation__explode_scale="property: scale; to: 0.65 0.65 0.65; dur: 1100; delay: 0; easing: easeOutCubic; startEvents: explode"
+                  animation__assemble_scale="property: scale; to: 1 1 1; dur: 1100; delay: 900; easing: easeInOutCubic; startEvents: assemble">
           <a-gltf-model src="#dish" rotation="${rot}" position="${pos}" scale="${sc}"></a-gltf-model>
         </a-entity>
       </a-entity></a-entity></a-entity>
@@ -598,7 +598,7 @@
     // animations and left the pizza hidden behind the dough disc.
     // "See layers" toggles: exploded <-> assembled.
     let layersExploded = true; // matches the initial positions in buildScene()
-    const getLayers = () => ['layer-dough', 'layer-sauce', 'layer-cheese', 'layer-pizza'].map(id => $(id)).filter(Boolean);
+    const getLayers = () => ['layer-dough', 'layer-cheese', 'layer-pizza'].map(id => $(id)).filter(Boolean);
     const assembleLayers = () => {
       const layers = getLayers(); if (!layers.length) return;
       layers.forEach(el => el.emit('assemble'));
