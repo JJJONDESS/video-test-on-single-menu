@@ -35,9 +35,11 @@
       animation__assemble="property: position; to: 0 0 -0.02; dur: 1100; delay: 450; easing: easeInOutCubic; startEvents: assemble">
       <a-plane width="0.64" height="0.175" src="#img-mid" transparent="true" side="double"></a-plane>
     </a-entity>
-    <a-entity id="layer-pizza" position="0 0.45 0.45"
+    <a-entity id="layer-pizza" position="0 0.45 0.45" scale="0.65 0.65 0.65"
       animation__explode="property: position; to: 0 0.45 0.45; dur: 1100; delay: 0; easing: easeOutCubic; startEvents: explode"
-      animation__assemble="property: position; to: 0 0 0; dur: 1100; delay: 900; easing: easeInOutCubic; startEvents: assemble">
+      animation__assemble="property: position; to: 0 0 0; dur: 1100; delay: 900; easing: easeInOutCubic; startEvents: assemble"
+      animation__explode_scale="property: scale; to: 0.65 0.65 0.65; dur: 1100; delay: 0; easing: easeOutCubic; startEvents: explode"
+      animation__assemble_scale="property: scale; to: 1 1 1; dur: 1100; delay: 900; easing: easeInOutCubic; startEvents: assemble">
       <a-gltf-model src="#dish" rotation="90 0 0" position="0 0 0.02" scale="2 2 2"></a-gltf-model>
     </a-entity>
   </a-entity></a-entity></a-entity>
